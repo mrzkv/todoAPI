@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задачи</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ваши задачи</h1>
+        <input type="text" id="newTask" placeholder="Новая задача">
+        <button onclick="createTask()">Создать</button>
+        <ul id="taskList"></ul>
+        <button onclick="pingServer()">Проверить сервер</button>
+        <p id="serverStatus"></p>
+    </div>
+
+    <script src="tasks.js"></script>
+</body>
+</html>

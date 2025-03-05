@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from starlette.responses import JSONResponse
 from starlette import status
+from src.app_services.config import tokens_config
 from src.app_services.schemes import SignScheme
 from src.app_services.security import get_hash, check_password_security, get_token
 from src.app_services.database_functions import (check_user_exists,
@@ -29,11 +30,9 @@ async def sign_up(creds: SignScheme) -> JSONResponse:
 
 
 @router.post('/sign-in')
-async def sign_in(creds: SignScheme):
+async def sign_in(creds: SignScheme, response: Response):
     if compare_digest(await get_user_password(creds.login), await get_hash(creds.password)):
-        return JSONResponse(
-            status_code=status.HTTP_200_OK,
-            content={'access_token': await get_token(creds.login)}
-        )
-    else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        token = await get_token(creds.login)
+        response.set_cookie(tokens_config.JWT_ACCESS_COOKIE_NAME, token)
+        return {'access_token': token}
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

@@ -1,0 +1,238 @@
+openapi: 3.0.3
+info:
+  title: Task Management API
+  version: 1.0.0
+  description: API для регистрации, аутентификации, управления задачами и проверки работоспособности сервера
+
+paths:
+  /v1/api/auth/sign-up:
+    post:
+      summary: Регистрация пользователя
+      operationId: signUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignScheme'
+      responses:
+        "201":
+          description: Успешная регистрация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  message:
+                    type: string
+                    example: "account registered"
+        "400":
+          description: Некорректные данные (короткий логин или слабый пароль)
+        "409":
+          description: Пользователь уже существует
+
+  /v1/api/auth/sign-in:
+    post:
+      summary: Авторизация пользователя
+      operationId: signIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignScheme'
+      responses:
+        "200":
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: "your.jwt.token"
+          headers:
+            Set-Cookie:
+              description: JWT токен передается через cookie
+              schema:
+                type: string
+        "401":
+          description: Неверный логин или пароль
+
+  /v1/api/tasks/list:
+    get:
+      summary: Получение списка задач пользователя
+      operationId: userTaskList
+      parameters:
+        - name: token
+          in: cookie
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Список задач
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+        "401":
+          description: Ошибка авторизации (отсутствует или некорректный токен)
+
+  /v1/api/tasks/create:
+    post:
+      summary: Создание новой задачи
+      operationId: userCreateNewTask
+      parameters:
+        - name: token
+          in: cookie
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskScheme'
+      responses:
+        "200":
+          description: Задача создана
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  message:
+                    type: string
+                    example: "task 'Task Name' has created"
+        "401":
+          description: Ошибка авторизации (отсутствует или некорректный токен)
+
+  /v1/api/tasks/change-mode:
+    patch:
+      summary: Изменение статуса задачи
+      operationId: userChangeTaskMode
+      parameters:
+        - name: token
+          in: cookie
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskScheme'
+      responses:
+        "200":
+          description: Статус задачи обновлен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  task:
+                    $ref: '#/components/schemas/Task'
+        "400":
+          description: Некорректный статус задачи
+        "401":
+          description: Ошибка авторизации (отсутствует или некорректный токен)
+
+  /v1/api/ping:
+    get:
+      summary: Проверка работоспособности сервера
+      operationId: pingHandler
+      responses:
+        "200":
+          description: Сервер работает, возвращает uptime
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uptime:
+                    type: string
+                    example: "3600.52"
+
+  /:
+    get:
+      summary: Обработчик неизвестных URL
+      operationId: badUrlHandler
+      responses:
+        "404":
+          description: Неправильный путь, API находится по другому адресу
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "error"
+                  detail:
+                    type: string
+                    example: "go to http://127.0.0.1:8000/v1/api"
+
+components:
+  schemas:
+    SignScheme:
+      type: object
+      properties:
+        login:
+          type: string
+          example: "user123"
+        password:
+          type: string
+          example: "StrongP@ssw0rd!"
+
+    CreateTaskScheme:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "My New Task"
+
+    UpdateTaskScheme:
+      type: object
+      properties:
+        taskid:
+          type: integer
+          example: 1
+        mode:
+          $ref: '#/components/schemas/TaskMode'
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Task One"
+        mode:
+          $ref: '#/components/schemas/TaskMode'
+
+    TaskMode:
+      type: string
+      enum:
+        - ACTIVE
+        - DELETED
+        - COMPLETED

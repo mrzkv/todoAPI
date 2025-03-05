@@ -2,7 +2,7 @@ import hashlib
 import re
 from src.app_services.config import tokens_config
 from src.app_services.database_functions import get_userid
-from authx import AuthX, TokenPayload
+from authx import AuthX
 
 authx_security = AuthX(config=tokens_config)
 
@@ -22,5 +22,9 @@ async def get_token(login: str) -> str:
     return authx_security.create_access_token(uid=str(await get_userid(login)))
 
 
-async def decode_token(token: str) -> TokenPayload:
-    return authx_security._decode_token(token)
+async def decode_token(token: str) -> int | str:
+    try:
+        token_payload = int(authx_security._decode_token(token).sub)
+    except:
+        token_payload = 'Token has expired'
+    return token_payload

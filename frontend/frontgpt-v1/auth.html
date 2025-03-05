@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Вход в Task Manager</h1>
+        <input type="text" id="login" placeholder="Логин">
+        <input type="password" id="password" placeholder="Пароль">
+        <button onclick="register()">Зарегистрироваться</button>
+        <button onclick="loginUser()">Войти</button>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:8765/v1/api";
+
+        async function register() {
+            const login = document.getElementById("login").value;
+            const password = document.getElementById("password").value;
+
+            await fetch(`${API_URL}/auth/sign-up`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ login, password })
+            });
+
+            alert("Регистрация успешна!");
+        }
+
+        async function loginUser() {
+            const login = document.getElementById("login").value;
+            const password = document.getElementById("password").value;
+
+            const res = await fetch(`${API_URL}/auth/sign-in`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ login, password }),
+                credentials: "include"
+            });
+
+            if (res.ok) {
+                window.location.href = "tasks.html"; // Переход на страницу задач
+            } else {
+                alert("Ошибка авторизации");
+            }
+        }
+    </script>
+</body>
+</html>
