@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, Response
 from starlette.responses import JSONResponse
 from starlette import status
-from src.app_services.config import tokens_config
-from src.app_services.schemes import SignScheme
-from src.app_services.security import get_hash, check_password_security, get_token
-from src.app_services.database_functions import (check_user_exists,
-                                                 register_user, get_user_password)
+from services.config import tokens_config
+from services.schemes import SignScheme
+from services.security import get_hash, check_password_security, get_token
+from services.database_functions import (check_user_exists,
+                                             register_user, get_user_password)
 from secrets import compare_digest
 
 router = APIRouter(prefix='/v1/api/auth')

@@ -1,8 +1,7 @@
 import time
-from fastapi import APIRouter
-from starlette import status
+from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
-from src.app_services.config import server_start_time, ip_address, server_port
+from services.config import SERVER_START_TIME, SERVER_PORT, IP_ADDRESS
 
 router = APIRouter()
 
@@ -10,11 +9,11 @@ router = APIRouter()
 @router.get('/v1/api/ping')
 async def ping_handler() -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK,
-                        content={'uptime': f'{time.time() - server_start_time}'})
+                        content={'uptime': f'{int(time.time()) - SERVER_START_TIME}'})
 
 
 @router.get('/')
 async def bad_url_handler() -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_404_NOT_FOUND,
                         content={'status': 'error',
-                                 'detail': f'go to {ip_address}:{server_port}/v1/api'})
+                                 'detail': f'go to {IP_ADDRESS}:{SERVER_PORT}/v1/api'})

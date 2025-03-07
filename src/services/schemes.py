@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
-
-from src.app_services.database_tables import TaskMode
+from services.database_tables import TaskMode
 
 
 class SignScheme(BaseModel):

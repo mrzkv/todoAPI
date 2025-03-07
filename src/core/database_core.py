@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
-from src.app_services.config import DATABASE_URL
-from src.app_services.database_tables import *
+from services.database_tables import *
+from services.config import DATABASE_URL
 
 # Configure async engine and session
 engine = create_async_engine(DATABASE_URL, echo=False)

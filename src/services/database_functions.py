@@ -1,6 +1,6 @@
 from sqlalchemy import update
-from src.app_core.database_core import get_async_session
-from src.app_services.database_tables import UserData, TaskList, TaskMode
+from core.database_core import get_async_session
+from services.database_tables import UserData, TaskList, TaskMode
 from sqlalchemy.future import select
 from typing import List
 

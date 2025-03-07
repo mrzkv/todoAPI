@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Cookie, status
-from src.app_services.database_functions import get_user_task_list, create_user_task, change_user_task_mode
-from src.app_services.schemes import CreateTaskScheme, UpdateTaskScheme, TaskMode
-from src.app_services.security import decode_token
-from src.app_services.config import tokens_config
+from services.database_functions import get_user_task_list, create_user_task, change_user_task_mode
+from services.schemes import CreateTaskScheme, UpdateTaskScheme, TaskMode
+from services.security import decode_token
+from services.config import tokens_config
 
 router = APIRouter(prefix='/v1/api/tasks')
 

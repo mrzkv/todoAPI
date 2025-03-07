@@ -1,7 +1,7 @@
 import hashlib
 import re
-from src.app_services.config import tokens_config
-from src.app_services.database_functions import get_userid
+from services.config import tokens_config
+from services.database_functions import get_userid
 from authx import AuthX
 
 authx_security = AuthX(config=tokens_config)

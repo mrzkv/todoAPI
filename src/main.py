@@ -1,11 +1,11 @@
 from asyncio import run
 from fastapi import FastAPI
-from src.app_core.database_core import init_db
-from src.routers.system_router import router as system_router
-from src.routers.sign_router import router as sign_router
-from src.routers.task_router import router as task_router
+from core.database_core import init_db
+from routers.system_router import router as system_router
+from routers.sign_router import router as sign_router
+from routers.task_router import router as task_router
 import uvicorn
-from src.app_services.config import server_start_time, ip_address, server_port
+from services.config import SERVER_PORT, SERVER_START_TIME, IP_ADDRESS
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -22,11 +22,11 @@ app.add_middleware(
 )
 
 def start_server():
-    print(f'Server start time - {server_start_time}')
+    print(f'Server start time - {SERVER_START_TIME}')
     uvicorn.run(
         app='main:app',
-        host=ip_address,
-        port=server_port,
+        host=IP_ADDRESS,
+        port=SERVER_PORT,
         log_level="info",
         reload=True
     )

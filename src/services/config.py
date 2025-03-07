@@ -1,13 +1,10 @@
 import time
-import os
 from authx import AuthXConfig
 from datetime import timedelta
 
-server_start_time = int(time.time())
-# server_port = int(os.getenv("SERVER_PORT"))
-# ip_address = os.getenv("IP_ADDRESS")
-server_port = 8765
-ip_address = 'localhost'
+SERVER_START_TIME = int(time.time())
+SERVER_PORT = 8765
+IP_ADDRESS = 'localhost'
 DATABASE_URL = 'postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/bot_users'
 
 tokens_config = AuthXConfig()
