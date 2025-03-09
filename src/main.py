@@ -6,14 +6,14 @@ from routers.system_router import router as system_router
 from routers.sign_router import router as sign_router
 from routers.task_router import router as task_router
 import uvicorn
-from core.config import SERVER_PORT, SERVER_START_TIME, IP_ADDRESS
+from core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 from core.database.helper import db_helper
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:63343"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,11 +29,11 @@ app.include_router(task_router)
 
 
 def start_server():
-    print(f'Server start time - {SERVER_START_TIME}')
+    print(f'Server start time - {int(settings.SERVER_START_TIME)}')
     uvicorn.run(
         app='main:app',
-        host=IP_ADDRESS,
-        port=SERVER_PORT,
+        host=settings.IP_ADDRESS,
+        port=settings.SERVER_PORT,
         log_level="info",
         reload=True
     )

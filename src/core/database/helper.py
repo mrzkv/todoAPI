@@ -1,7 +1,7 @@
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import (create_async_engine, AsyncEngine,
                                     async_sessionmaker, AsyncSession)
-from core.config import DATABASE_URL
+from core.config import settings
 from core.database.tables import Base
 
 
@@ -39,11 +39,11 @@ class DatabaseHelper:
 
 
 db_helper = DatabaseHelper(
-    url=DATABASE_URL,
+    url=settings.db.DATABASE_URL,
     echo=False,
     echo_pool=False,
-    pool_size=50,
-    max_overflow=10,
+    pool_size=settings.db.POOL_SIZE,
+    max_overflow=settings.db.MAX_OVERFLOW,
 )
 
 

@@ -5,14 +5,14 @@ from core.database.functions import User, Task
 from core.database.helper import db_helper
 from core.schemes import CreateTaskScheme, UpdateTaskScheme
 from services.security import decode_token
-from core.config import tokens_config
+from core.config import settings
 from typing import Annotated
 
-router = APIRouter(prefix='/v1/api/tasks')
+router = APIRouter(prefix=settings.prefix.TASK, tags=['tasks'])
 
 
 @router.get(path='/list')
-async def user_task_list(token: str = Cookie(alias=tokens_config.JWT_ACCESS_COOKIE_NAME),
+async def user_task_list(token: str = Cookie(alias=settings.token.JWT_ACCESS_COOKIE_NAME),
                          session: AsyncSession = Depends(db_helper.get_async_session)
 ) -> JSONResponse:
 
@@ -31,7 +31,7 @@ async def user_task_list(token: str = Cookie(alias=tokens_config.JWT_ACCESS_COOK
 
 @router.post(path='/create')
 async def user_create_new_task(creds: CreateTaskScheme,
-                               token: str = Cookie(alias=tokens_config.JWT_ACCESS_COOKIE_NAME),
+                               token: str = Cookie(alias=settings.token.JWT_ACCESS_COOKIE_NAME),
                                session: AsyncSession = Depends(db_helper.get_async_session)
 ) -> JSONResponse:
     if not token:
@@ -51,7 +51,7 @@ async def user_create_new_task(creds: CreateTaskScheme,
 
 @router.patch(path='/change-mode')
 async def user_change_task_mode(creds: UpdateTaskScheme,
-                                token: str = Cookie(alias=tokens_config.JWT_ACCESS_COOKIE_NAME),
+                                token: str = Cookie(alias=settings.token.JWT_ACCESS_COOKIE_NAME),
                                 session: AsyncSession = Depends(db_helper.get_async_session)
 ) -> JSONResponse:
     if not token:

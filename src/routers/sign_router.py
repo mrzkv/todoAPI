@@ -1,7 +1,7 @@
 from secrets import compare_digest
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Response, status, Depends
-from core.config import tokens_config
+from core.config import settings
 from core.database.functions import User
 from core.database.helper import db_helper
 from core.schemes import SignScheme
@@ -9,7 +9,8 @@ from services.security import get_hash, create_token
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-router = APIRouter(prefix='/v1/api/auth')
+
+router = APIRouter(prefix=settings.prefix.AUTH, tags=['auth'])
 
 
 @router.post('/sign-up')
@@ -38,7 +39,7 @@ async def sign_in(creds: SignScheme,
     if not compare_digest(user_data.hashed_password, await get_hash(creds.password)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     token = await create_token(user_data.id)
-    response.set_cookie(key=tokens_config.JWT_ACCESS_COOKIE_NAME,
+    response.set_cookie(key=settings.token.JWT_ACCESS_COOKIE_NAME,
                         value=token,
                         httponly=True)
     return {'access_token': token}

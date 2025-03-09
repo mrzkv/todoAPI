@@ -1,8 +1,8 @@
 import hashlib
-from core.config import tokens_config
+from core.config import settings
 from authx import AuthX
 
-authx_security = AuthX(config=tokens_config)
+authx_security = AuthX(config=settings.token)
 
 
 async def get_hash(message: str) -> str:

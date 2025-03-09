@@ -1,10 +1,10 @@
 import httpx
 import pytest
-from core.config import IP_ADDRESS, SERVER_PORT
+from core.config import settings
 import random
 import string
 
-BASE_URL = f"http://{IP_ADDRESS}:{SERVER_PORT}/v1/api"
+BASE_URL = f"http://{settings.IP_ADDRESS}:{settings.SERVER_PORT}/v1/api"
 
 
 def generate_random_name(length=8):
