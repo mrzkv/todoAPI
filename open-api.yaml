@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Task Management API
   version: 1.0.0
-  description: API для регистрации, аутентификации, управления задачами.
+  description: API для управления задачами.
 
 paths:
   /v1/api/auth/sign-up:
