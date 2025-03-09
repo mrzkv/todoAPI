@@ -17,8 +17,8 @@ Task manager API for my future app's.
 ![App Screenshot](https://github.com/mrzkv/todoAPI/blob/main/frontend/frontgpt-v2/site_photos/task_page.png?raw=true)
 ## Documentation
 
-- [Endpoints docs](https://github.com/mrzkv/todoAPI/blob/main/open-api.yaml)
-
+- [Endpoints docs](https://github.com/mrzkv/todoAPI/blob/main/open-api.yaml)  
+for better experience view docs on [Swagger Editor](https://editor.swagger.io/)
 
 ## Authors
 
