@@ -1,3 +1,6 @@
+import time
+from typing import AsyncGenerator
+from contextlib import asynccontextmanager
 from asyncio import run
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
@@ -9,7 +12,23 @@ import uvicorn
 from core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 from core.database.helper import db_helper
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+
+    try:
+        yield
+    finally:
+        server_uptime = int(time.time() - settings.SERVER_START_TIME)
+        shutdown_time = int(time.time())
+        print(
+            f"Server shutdown\n"
+            f"Total uptime: {server_uptime} seconds\n"
+            f"End time in timestamp: {shutdown_time}"
+        )
+        await db_helper.dispose()
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,7 +41,6 @@ app.add_middleware(
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
-
 app.include_router(system_router)
 app.include_router(sign_router)
 app.include_router(task_router)
@@ -35,7 +53,7 @@ def start_server():
         host=settings.IP_ADDRESS,
         port=settings.SERVER_PORT,
         log_level="info",
-        reload=True
+        reload=True,
     )
 
 
