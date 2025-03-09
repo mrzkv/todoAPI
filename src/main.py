@@ -1,5 +1,7 @@
 from asyncio import run
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from core.database_core import init_db
 from routers.system_router import router as system_router
 from routers.sign_router import router as sign_router
@@ -9,9 +11,6 @@ from services.config import SERVER_PORT, SERVER_START_TIME, IP_ADDRESS
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-app.include_router(system_router)
-app.include_router(sign_router)
-app.include_router(task_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,6 +19,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
+                        content={"status": "error",
+                                 "message": "Ошибка в данных запроса."})
+
+
+app.include_router(system_router)
+app.include_router(sign_router)
+app.include_router(task_router)
+
 
 def start_server():
     print(f'Server start time - {SERVER_START_TIME}')

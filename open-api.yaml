@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Task Management API
   version: 1.0.0
-  description: API для регистрации, аутентификации, управления задачами и проверки работоспособности сервера
+  description: API для регистрации, аутентификации, управления задачами.
 
 paths:
   /v1/api/auth/sign-up:
@@ -233,6 +233,6 @@ components:
     TaskMode:
       type: string
       enum:
-        - ACTIVE
-        - DELETED
-        - COMPLETED
+        - active
+        - deleted
+        - completed

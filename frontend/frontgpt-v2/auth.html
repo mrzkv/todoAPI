@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Вход в систему</h1>
+        <input type="text" id="login" placeholder="Логин" onkeydown="handleAuthEnter(event, 'password')">
+        <input type="password" id="password" placeholder="Пароль" oninput="validatePassword()" onkeydown="handleAuthEnter(event, 'submit')">
+        <ul class="password-hints">
+            <li id="length">Минимальная длина пароля - 8 символов</li>
+            <li id="special">В пароле должен быть хотя-бы 1 спец.символ (!@#$%^&*)</li>
+            <li id="uppercase-lowercase">В пароле должна быть хотя-бы 1 маленькая и большая буква</li>
+            <li id="digit">В пароле должна быть хотя-бы 1 цифра</li>
+        </ul>
+        <button onclick="signUp()">Зарегистрироваться</button>
+        <button onclick="signIn()">Войти</button>
+        <p id="error-message" class="error-message"></p>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:8765/v1/api/auth";
+
+        function handleAuthEnter(event, nextField) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                if (nextField === "password") {
+                    document.getElementById("password").focus();
+                } else if (nextField === "submit") {
+                    signUp();
+                }
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById("password").value;
+            document.getElementById("length").style.color = password.length >= 8 ? "green" : "gray";
+            document.getElementById("special").style.color = /[!@#$%^&*]/.test(password) ? "green" : "gray";
+            document.getElementById("uppercase-lowercase").style.color = /[a-z]/.test(password) && /[A-Z]/.test(password) ? "green" : "gray";
+            document.getElementById("digit").style.color = /\d/.test(password) ? "green" : "gray";
+        }
+
+        async function signUp() {
+            const login = document.getElementById("login").value;
+            const password = document.getElementById("password").value;
+
+            const res = await fetch(`${API_URL}/sign-up`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ login, password }),
+                credentials: "include"
+            });
+
+            const data = await res.json();
+            if (res.status === 201) {
+                await signIn();
+            } else if (res.status >= 400 && res.status < 500) {
+                showError(data.detail || "Ошибка регистрации");
+            }
+        }
+
+        async function signIn() {
+            const login = document.getElementById("login").value;
+            const password = document.getElementById("password").value;
+
+            const res = await fetch(`${API_URL}/sign-in`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ login, password }),
+                credentials: "include"
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                window.location.href = "tasks.html";
+            } else if (res.status >= 400 && res.status < 500) {
+                showError(data.detail || "Ошибка входа");
+            }
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById("error-message");
+            errorElement.textContent = message;
+            errorElement.style.display = "block";
+        }
+    </script>
+</body>
+</html>

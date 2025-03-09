@@ -71,16 +71,10 @@ async def create_user_task(userid: int, taskname: str) -> None:
         await session.commit()
 
 
-async def change_user_task_mode(userid: int, taskid: int, mode: str) -> dict | None:
+async def change_user_task_mode(userid: int, taskid: int, mode: str) -> None:
     async for session in get_async_session():
-        stmt = (
+        await session.execute(
             update(TaskList)
             .where(TaskList.user_id == userid, TaskList.id == taskid)
-            .values(mode=mode)
-            .returning(TaskList.id, TaskList.name, TaskList.mode)
-        )
-        result = await session.execute(stmt)
-        updated_task = result.mappings().first()
-
+            .values(mode=mode))
         await session.commit()
-        return dict(updated_task) if updated_task else None

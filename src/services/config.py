@@ -1,7 +1,6 @@
 import time
 from authx import AuthXConfig
-from datetime import timedelta
-
+import datetime
 SERVER_START_TIME = int(time.time())
 SERVER_PORT = 8765
 IP_ADDRESS = 'localhost'
@@ -11,4 +10,4 @@ tokens_config = AuthXConfig()
 tokens_config.JWT_SECRET_KEY = 'SECRET_KEY'
 tokens_config.JWT_TOKEN_LOCATION = ['cookies']
 tokens_config.JWT_ACCESS_COOKIE_NAME = 'my_access_token'
-tokens_config.JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=600)
+tokens_config.JWT_ACCESS_TOKEN_EXPIRES = datetime.datetime.now(datetime.UTC)+datetime.timedelta(minutes=600)

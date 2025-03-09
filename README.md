@@ -11,10 +11,10 @@ Task manager API for my future app's.
 - PostgreSQL
 - SQLAlchemy
 ## Screenshots
-**Auth Page**
-![App Screenshot](https://github.com/mrzkv/todoAPI/blob/main/site_photos/auth_page.png?raw=true)
-**Task Page**
-![App Screenshot](https://github.com/mrzkv/todoAPI/blob/main/site_photos/task_page.png?raw=true)
+**<p align="center">Auth Page</p>**
+![App Screenshot](https://github.com/mrzkv/todoAPI/blob/main/frontend/frontgpt-v1/site_photos/auth_page.png?raw=true)
+**<p align="center">Task Page</p>**
+![App Screenshot](https://github.com/mrzkv/todoAPI/blob/main/frontend/frontgpt-v1/site_photos/task_page.png?raw=true)
 ## Documentation
 
 - [Endpoints docs](https://github.com/mrzkv/todoAPI/blob/main/open-api.yaml)
