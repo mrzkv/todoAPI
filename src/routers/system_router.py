@@ -1,15 +1,14 @@
 import time
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
-from services.config import SERVER_START_TIME, SERVER_PORT, IP_ADDRESS
+from core.config import SERVER_START_TIME, SERVER_PORT, IP_ADDRESS
 
 router = APIRouter()
 
 
 @router.get('/v1/api/ping')
 async def ping_handler() -> JSONResponse:
-    return JSONResponse(status_code=status.HTTP_200_OK,
-                        content={'uptime': f'{int(time.time()) - SERVER_START_TIME}'})
+    return {'uptime': time.time()-SERVER_START_TIME}
 
 
 @router.get('/')

@@ -1,6 +1,6 @@
 import httpx
 import pytest
-from src.services.config import IP_ADDRESS, SERVER_PORT
+from core.config import IP_ADDRESS, SERVER_PORT
 import random
 import string
 
@@ -64,7 +64,7 @@ def test_create_task(test_client, auth_token):
     cookies = {"token": auth_token}
     task_data = {"name": "Test Task"}
     response = test_client.post("/tasks/create", json=task_data, cookies=cookies)
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json()["status"] == "ok"
 
 
@@ -72,7 +72,7 @@ def test_change_task_mode(test_client, auth_token):
     cookies = {"token": auth_token}
     task_data = {"name": "Task to Update"}
     create_response = test_client.post("/tasks/create", json=task_data, cookies=cookies)
-    assert create_response.status_code == 200
+    assert create_response.status_code == 201
 
     task_id = 1
     update_data = {"taskid": task_id, "mode": "completed"}
