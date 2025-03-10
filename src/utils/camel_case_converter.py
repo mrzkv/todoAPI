@@ -1,6 +1,8 @@
+from loguru import logger
 
 
 # https://github.com/mahenzon/ri-sdk-python-wrapper/blob/master/ri_sdk_codegen/utils/case_converter.py
+@logger.catch
 def camel_case_to_snake_case(input_str: str) -> str:
     """
     >>> camel_case_to_snake_case("SomeSDK")

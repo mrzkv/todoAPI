@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 import re
+from loguru import logger
 
 
 class SignScheme(BaseModel):
@@ -9,8 +10,9 @@ class SignScheme(BaseModel):
     @field_validator("password", check_fields=False)
     def validate_password(cls, password):
         if not re.fullmatch(
-                r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+                r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#^()_+:><|\\/@$!%*?&])[A-Za-z\d#^()_+:><|\\/@$!%*?&]{8,}$",
                 password):
+            logger.info(f"incorrect password: {password}")
             raise ValueError('The password must contain 1 number,'
                              ' 1 lowercase and uppercase letter,'
                              ' 1 special character and be at least 8 characters long.')

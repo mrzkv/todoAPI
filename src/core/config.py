@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import time
 from authx import AuthXConfig
 from pydantic_settings import BaseSettings
+from loguru import logger
 
 
 class DatabaseSettings(BaseSettings):
@@ -15,6 +16,16 @@ class RoutersPrefix(BaseSettings):
     AUTH: str
 
 
+class LoggerSettings(BaseSettings):
+    filename: str = "app"
+    extension: str = ".log"
+    level: str = "DEBUG"
+    rotation: str = "12:00"
+    serialize: bool = False
+    compression: str = "zip"
+    format: str = "{time} {level} {message}"
+
+
 class Settings(BaseSettings):
     SERVER_START_TIME: int
     SERVER_PORT: int = 8765
@@ -22,6 +33,7 @@ class Settings(BaseSettings):
     db: DatabaseSettings
     prefix: RoutersPrefix
     token: AuthXConfig
+    logger: LoggerSettings
 
 
 settings = Settings(
@@ -42,5 +54,23 @@ settings = Settings(
         JWT_TOKEN_LOCATION=['cookies'],
         JWT_ACCESS_COOKIE_NAME='my_access_token',
         JWT_ACCESS_TOKEN_EXPIRES=int(timedelta(minutes=600).total_seconds())
+    ),
+    logger=LoggerSettings(
+        filename="app",
+        extension=".log",
+        level="DEBUG",
+        compression="zip",
+        rotation="5MB",
+        serialize=False,
+        format="{time} {level} {message}"
     )
+)
+
+logger.add(
+    sink=f'{settings.logger.filename}{settings.logger.extension}',
+    level=settings.logger.level,
+    format=settings.logger.format,
+    serialize=settings.logger.serialize,
+    rotation=settings.logger.rotation,
+    compression=settings.logger.compression,
 )

@@ -1,14 +1,15 @@
 from secrets import compare_digest
-from typing import Annotated
+
 from fastapi import APIRouter, HTTPException, Response, status, Depends
+from fastapi.responses import JSONResponse
+from loguru import logger
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.config import settings
 from core.database.functions import User
 from core.database.helper import db_helper
 from core.schemes import SignScheme
 from services.security import get_hash, create_token
-from fastapi.responses import JSONResponse
-from sqlalchemy.ext.asyncio import AsyncSession
-
 
 router = APIRouter(prefix=settings.prefix.AUTH, tags=['auth'])
 
@@ -21,6 +22,7 @@ async def sign_up(creds: SignScheme,
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='User with this login already exists')
 
     await User.register(creds.login, await get_hash(creds.password), session=session)
+    logger.info(f"User '{creds.login}' registered")
     return JSONResponse(
         status_code=status.HTTP_201_CREATED,
         content={
@@ -39,6 +41,7 @@ async def sign_in(creds: SignScheme,
     if not compare_digest(user_data.hashed_password, await get_hash(creds.password)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     token = await create_token(user_data.id)
+    logger.info(f"User '{creds.login}' sign-in successfully")
     response.set_cookie(key=settings.token.JWT_ACCESS_COOKIE_NAME,
                         value=token,
                         httponly=True)

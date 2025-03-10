@@ -3,3 +3,5 @@ venv
 .gitignore
 *.pycache
 *.pyc
+*.log
+*.logs

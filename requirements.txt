@@ -9,3 +9,4 @@ iniconfig==2.0.0
 pluggy==1.5.0
 pytest==8.3.5
 httpx==0.28.1
+logguru==0.7.3
